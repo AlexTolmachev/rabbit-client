@@ -1,0 +1,3 @@
+extends: '@bifot/eslint-config'
+rules:
+  no-console: off

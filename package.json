@@ -1,0 +1,36 @@
+{
+  "name": "rabbit-client",
+  "version": "1.1.1",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexTolmachev/rabbit-client.git"
+  },
+  "author": {
+    "name": "Alexander Tolmachev",
+    "email": "alextolmachevv@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/AlexTolmachev/rabbit-client/issues"
+  },
+  "homepage": "https://github.com/AlexTolmachev/rabbit-client#readme",
+  "license": "MIT",
+  "scripts": {
+    "eslint": "eslint src",
+    "eslint:fix": "eslint src --fix",
+    "test": "mocha --exit",
+    "manual-test": "node --experimental-modules src/manualTest"
+  },
+  "devDependencies": {
+    "@bifot/eslint-config": "^1.0.2",
+    "chai": "^4.2.0",
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "mocha": "^6.1.4",
+    "node-cleanup": "^2.1.2"
+  }
+}
