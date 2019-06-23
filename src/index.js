@@ -25,10 +25,10 @@ module.exports = class RabbitClient {
       this.options.appName ? { clientProperties: { APP_NAME: this.options.appName } } : undefined,
     );
 
-    this.connection.on('error', async () => {
+    this.connection.on('error', async (e) => {
       this.connection.close().catch(console.error);
 
-      console.error('RabbitMQ: Connection error');
+      console.error('RabbitMQ: Connection error', e);
       this.connection = null;
       this.connect().catch(console.error);
     });
@@ -82,28 +82,36 @@ module.exports = class RabbitClient {
       channel.consume = (queueName, onMessage, consumeOptions) => consume(
         queueName,
         (msg) => {
+          if (msg === null) {
+            return;
+          }
+
           const data = msg.content.toString();
 
           if (this.options.json === true) {
             try {
               const json = JSON.parse(data);
 
-              return onMessage(msg, channel, json);
+              onMessage(msg, channel, json);
+
+              return;
             } catch (err) {
-              return onMessage(msg, channel, null);
+              onMessage(msg, channel, null);
+
+              return;
             }
           }
 
-          return onMessage(msg, channel, data);
+          onMessage(msg, channel, data);
         },
         consumeOptions,
       );
 
       if (typeof options.onReconnect === 'function') {
-        channel.on('error', async () => {
+        channel.on('error', async (e) => {
           channel.close().catch(console.error);
 
-          console.error('RabbitMQ: Channel error');
+          console.error('RabbitMQ: Channel error', e);
 
           await sleep(this.options.sleepTime);
           await this.getChannel(options);
