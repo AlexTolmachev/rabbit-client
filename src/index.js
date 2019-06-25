@@ -9,7 +9,7 @@ const defaultConstructorOptions = {
 };
 
 module.exports = class RabbitClient {
-  constructor(rabbitUrl, options) {
+  constructor(rabbitUrl = 'amqp://localhost:5672', options) {
     this.rabbitUrl = rabbitUrl;
     this.connection = null;
 
@@ -29,7 +29,7 @@ module.exports = class RabbitClient {
 
   async connect() {
     this.connection = await amqplib.connect(
-      this.rabbitUrl || 'amqp://localhost:5672',
+      this.rabbitUrl,
       this.options.appName ? { clientProperties: { APP_NAME: this.options.appName } } : undefined,
     );
 
