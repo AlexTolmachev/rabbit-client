@@ -19,6 +19,14 @@ module.exports = class RabbitClient {
     };
   }
 
+  log(type, ...args) {
+    if (this.options.disableLogging) {
+      return;
+    }
+
+    console[type](...args);
+  }
+
   async connect() {
     this.connection = await amqplib.connect(
       this.rabbitUrl || 'amqp://localhost:5672',
@@ -26,20 +34,20 @@ module.exports = class RabbitClient {
     );
 
     this.connection.on('error', async (e) => {
-      this.connection.close().catch(console.error);
+      this.connection.close().catch(this.log.bind(this, 'error'));
 
-      console.error('RabbitMQ: Connection error', e);
+      this.log('error', 'RabbitMQ: Connection error', e);
       this.connection = null;
-      this.connect().catch(console.error);
+      this.connect().catch(this.log.bind(this, 'error'));
     });
 
     this.connection.on('close', () => {
-      console.error('RabbitMQ: Connection close');
+      this.log('error', 'RabbitMQ: Connection close');
       this.connection = null;
-      this.connect().catch(console.error);
+      this.connect().catch(this.log.bind(this, 'error'));
     });
 
-    nodeCleanup(() => this.connection.close().catch(console.error));
+    nodeCleanup(() => this.connection.close().catch(this.log.bind(this, 'error')));
   }
 
   async getConnection(attempts = this.options.attempts) {
@@ -109,16 +117,16 @@ module.exports = class RabbitClient {
 
       if (typeof options.onReconnect === 'function') {
         channel.on('error', async (e) => {
-          channel.close().catch(console.error);
+          channel.close().catch(this.log.bind(this, 'error'));
 
-          console.error('RabbitMQ: Channel error', e);
+          this.log('error', 'RabbitMQ: Channel error', e);
 
           await sleep(this.options.sleepTime);
           await this.getChannel(options);
         });
 
         channel.on('close', async () => {
-          console.error('RabbitMQ: Channel close');
+          this.log('error', 'RabbitMQ: Channel close');
 
           await sleep(this.options.sleepTime);
           await this.getChannel(options);
@@ -129,7 +137,7 @@ module.exports = class RabbitClient {
 
       return channel;
     } catch (err) {
-      console.error('RabbitMQ: Cannot create channel', err);
+      this.log('error', 'RabbitMQ: Cannot create channel', err);
       throw err;
     }
   }
