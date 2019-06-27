@@ -19,7 +19,7 @@
     "eslint": "eslint src",
     "eslint:fix": "eslint src --fix",
     "test": "mocha --exit",
-    "manual-test": "node --experimental-modules src/manualTest"
+    "manual-test": "node misc/manual-tests/launcher.js"
   },
   "keywords": [
     "message-queue",

@@ -1,4 +1,4 @@
-const RabbitClient = require('./');
+const RabbitClient = require('../../src');
 
 const { RABBIT_URL } = process.env;
 
