@@ -29,15 +29,14 @@
     "amqp"
   ],
   "devDependencies": {
-    "@bifot/eslint-config": "^1.0.2",
     "chai": "^4.2.0",
-    "eslint": "^5.14.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.18.0",
+    "mocha": "^6.1.4"
   },
   "dependencies": {
     "amqplib": "^0.5.3",
-    "mocha": "^6.1.4",
     "node-cleanup": "^2.1.2"
   }
 }
